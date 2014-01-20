@@ -1,0 +1,7 @@
+name = Menu role rights
+description = Enables/disables administration access to menu items depending on role rules. Read more on <a href="http://code-kiste.hauertmann.com/content/rollenabhängiger-zugriff-auf-menuabschnitte" target="_new">code-kiste.hauertmann.com</a>. 
+core = 7.x
+package = whr-nrw
+php = 5.3
+version = 7.x-0.5(beta)
+configure = admin/config/content/menurolerights

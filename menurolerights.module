@@ -1,0 +1,143 @@
+<?php
+/** 
+ * menurolerights module file  
+ * 
+ * Contains all hooks for this module. The module accepts or rejects user
+ * actions in the menu overview form depending on role rules.
+ *
+ * @author Wolfgang Hauertmann <info@hauertmann.com>
+ * @copyright (c) 2014 Wolfgang Hauertmann
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GPL-2.0
+ * 
+ */
+
+/**
+ * Constants for "select" form element
+ */
+ define("SEL_NONE",     0);
+ define("SEL_DELETE",   1);
+ define("SEL_EDIT",     2);
+ define("SEL_NEW",      3);
+ define("SEL_ACTIVE",   4);
+ define("SEL_INACTIVE", 5);
+ define("SEL_CHANGE",   6);
+
+/*
+ * Includes all convenience functions to alter menu_overview_form
+ */
+module_load_include('inc', 'menurolerights', 'inc/form_alter_menu_overview');
+
+/*
+ * Includes helper methods for alter node form (add, edit content)
+ */
+module_load_include('inc', 'menurolerights', 'inc/form_alter_node_form_helper');
+
+/*
+ * Includes all convenience functions to alter node form (add, edit content)
+ */
+module_load_include('inc', 'menurolerights', 'inc/form_alter_node_form');
+
+/*
+ * Includes helper methods of form for module settings
+ */
+module_load_include('inc', 'menurolerights', 'inc/form_module_settings_helper');
+
+/*
+ * Includes the form for module settings
+ */
+module_load_include('inc', 'menurolerights', 'inc/form_module_settings');
+
+/**
+ * Implements hook_form_alter();
+ * 
+ * @param array $form (call by ref) 
+ *   Description array of all form elements
+ * @return void 
+ */
+function menurolerights_form_alter(&$form, &$form_state, $form_id) {
+  
+  // 'Menu overview form' is the form where you can arrange the menu hierarchy
+  // by drag & drop and where you can edit and delete menu items.
+  // Path: admin/structure/menu/manage/<menu_name>. <menu_name> is e.g. 'main-menu'
+  if ($form_id == 'menu_overview_form') {
+    _menurolerights_form_alter_menu_overview_form($form);
+  }
+  
+  // Forms where you edit content: 'article_node_form', 'news_node_form', etc.
+  // Paths e.g.: /node/add/article, /node/edit/article, ...
+  if (isset($form_state['build_info']['base_form_id']) 
+   &&($form_state['build_info']['base_form_id'] == 'node_form')) {
+    // Add an after_build function to process when everything's complete.
+    // Main task here is to change options of form element 'menu-parent-select'.
+    $form['#after_build'][] = '_node_form_after_build';
+  }
+  
+  
+}
+
+/**
+ * Implements hook_help().
+ */
+function menurolerights_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#menurolerights':  
+       return _menurolerights_information();
+  }
+}
+
+/**
+ * Helper function for menurolerights_help
+ * 
+ * Returns information about the module.
+ */
+function _menurolerights_information() {
+  return t("<p>This module provides a possiblity to accept or reject user
+    actions in the menu overview form depending on role rules.</p><p>A user 
+    who has the permission for this module can assign access rules to every 
+    submenu area of every menu !link.</p>",
+    array('!link' => l(t("here"), "admin/config/content/menurolerights"))
+  );
+}
+
+/**
+ * Implements hook_permission().
+ * 
+ * Tells to drupal what permissions the module have
+ * 
+ * @return array
+ *   Return an array of permissions
+ */
+function menurolerights_permission() {
+  return array(
+    'administer menurolerights' => array(
+      'title' => t('Administer the module menurolerights, which allows to set role rights for menu management.'),
+      'description' => t('Perform administration tasks for menurolerights.'),
+      'restrict access' => TRUE, 
+    ),
+  );
+}
+
+/**
+* Implements hook_menu()
+*/
+function menurolerights_menu(){
+    
+  /* Module settings */
+  $items['admin/config/content/menurolerights'] = array(
+    'title' => 'Set menu role rights',
+    'description' => 'Accepts or rejects user actions in the menu overview form depending on role rules',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('menurolerights_form'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_NORMAL_ITEM,   
+  );
+ 
+  return $items;   
+}
+
+
+
+
+
+
+

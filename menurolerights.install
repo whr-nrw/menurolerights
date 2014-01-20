@@ -1,0 +1,92 @@
+<?php
+/**
+ * Install, update and uninstall functions of module menurolerights   
+ * 
+ * @author Wolfgang Hauertmann <info@hauertmann.com>
+ * @copyright (c) 2014 Wolfgang Hauertmann
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GPL-2.0
+ * 
+ */
+
+/**
+* Implements hook_install().
+*/
+function menurolerights_install(){
+}
+
+/**
+* Implements hook_uninstall().
+*/
+function menurolerights_uninstall(){
+   // variable_del('a_variable');
+   // undo modifications on existing tables 
+}
+
+/**
+* Implements hook_schema().
+*/
+function menurolerights_schema(){
+    
+  $schema['menurolerights_rules'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'serial',   // autoincrement
+	'not null' => TRUE,
+      ),
+      'active' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',  // use this instead of 'bool'
+        'not null' => TRUE,
+      ),
+      'menu_name' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'role_id' => array(
+        'description' => 'TODO: please describe this field!',
+	'type' => 'int',
+	'not null' => TRUE,
+      ),
+      'item_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'notice' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+      ),
+      'cre_user' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),        
+      'cre_date' => array(
+        'description' => 'TODO: please describe this field!',
+	'mysql_type' => 'datetime',
+        'not null' => FALSE,
+      ),
+      'upd_user' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),        
+      'upd_date' => array(
+        'description' => 'TODO: please describe this field!',
+	'mysql_type' => 'datetime',
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('id'),
+  );  
+  return $schema;
+  
+}
